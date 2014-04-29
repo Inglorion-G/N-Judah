@@ -47,22 +47,20 @@ class Params
     return {} if query_string.nil?
     
     parsed_query = URI.decode_www_form(query_string)
-    parsed_query.each do |query_element|
-      key_array = parse_key(parsed_query)
-      
-      if key_array.length > 1
+    parsed_query.each do |query|
+      key = query.first
+      value = query.last
+        
+      if all_keys.length == 1
+        @params[key] = value
+      else
         base = @params
-        #(0...key_array.length).each do |key|
-        key_array.each do |key|
-          base[key] = {}
+        all_keys[0...-1].each do |key|
+          base[key] ||= {}
           base = base[key]
         end
-        base[key] = key_array.last
-      else
-        parsed_query.each do |query_element|  
-          @params[query_element.first] = query_element.last
-        end
-      end
+        base[all_keys.last] = value
+      end 
     end
   end
   
@@ -80,6 +78,6 @@ class Params
   # this should return an array
   # user[address][street] should return ['user', 'address', 'street']
   def parse_key(key)
-    all_keys = key.select { |key| key[/\]\[|\[|\]/] }
+    key.split(/\]\[|\[|\]/)
   end
 end
