@@ -1,5 +1,6 @@
 require 'webrick'
 require 'rails_lite'
+require 'debugger'
 
 describe Params do
   before(:all) do

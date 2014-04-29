@@ -1,7 +1,10 @@
 require 'json'
 require 'webrick'
+require 'forwardable'
 
 class Session
+  extend Forwardable
+  def_delegators :@cookie, :[], :[]=
   # find the cookie for this app
   # deserialize the cookie into a hash
   def initialize(req)
@@ -13,13 +16,13 @@ class Session
     @cookie ||= {}
   end
 
-  def [](key)
-    @cookie[key]
-  end
-
-  def []=(key, val)
-    @cookie[key] = val
-  end
+  # def [](key)
+#     @cookie[key]
+#   end
+# 
+#   def []=(key, val)
+#     @cookie[key] = val
+#   end
 
   # serialize the hash into json and save in a cookie
   # add to the responses cookies
