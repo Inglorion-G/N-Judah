@@ -45,11 +45,21 @@ class Params
   # { "user" => { "address" => { "street" => "main", "zip" => "89436" } } }
   def parse_query(query_string)
     return {} if query_string.nil?
-    
     parsed_query = URI.decode_www_form(query_string)
-    parsed_query.each do |query|
+    nest_hash(parsed_query)
+  end
+  
+  def parse_body(body)
+    return {} if body.nil?
+    parsed_body = URI.decode_www_form(body)
+    nest_hash(parsed_body)
+  end
+  
+  def nest_hash(query_vals)
+    query_vals.each do |query|
       key = query.first
       value = query.last
+      all_keys = parse_key(key)
         
       if all_keys.length == 1
         @params[key] = value
@@ -61,17 +71,6 @@ class Params
         end
         base[all_keys.last] = value
       end 
-    end
-  end
-  
-  def parse_body(body)
-    if body.nil?
-      return {}
-    else
-      parsed_body = URI.decode_www_form(body)
-      parsed_body.each do |body_element|  
-        @params[body_element.first] = body_element.last
-      end
     end
   end
 
