@@ -44,18 +44,24 @@ class Params
   # should return
   # { "user" => { "address" => { "street" => "main", "zip" => "89436" } } }
   def parse_query(query_string)
-    key_array = parse_key(query_string)
+    return {} if query_string.nil?
     
-    if key_array.nil?
-      return {}
-    elsif parse_key(query_string).length > 1
-      (0..(key_array.length - 1)).each do |i|
-        @params[key_array[i]] = {}
-      end
-    else
-      parsed_query = URI.decode_www_form(query_string)
-      parsed_query.each do |query_element|  
-        @params[query_element.first] = query_element.last
+    parsed_query = URI.decode_www_form(query_string)
+    parsed_query.each do |query_element|
+      key_array = parse_key(parsed_query)
+      
+      if key_array.length > 1
+        base = @params
+        #(0...key_array.length).each do |key|
+        key_array.each do |key|
+          base[key] = {}
+          base = base[key]
+        end
+        base[key] = key_array.last
+      else
+        parsed_query.each do |query_element|  
+          @params[query_element.first] = query_element.last
+        end
       end
     end
   end
