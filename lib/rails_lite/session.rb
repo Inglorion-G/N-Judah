@@ -16,14 +16,6 @@ class Session
     @cookie ||= {}
   end
 
-  # def [](key)
-#     @cookie[key]
-#   end
-# 
-#   def []=(key, val)
-#     @cookie[key] = val
-#   end
-
   # serialize the hash into json and save in a cookie
   # add to the responses cookies
   def store_session(res)

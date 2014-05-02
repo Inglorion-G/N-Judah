@@ -18,10 +18,6 @@ class Params
     parse_query(@req.query_string)
     parse_body(@req.body)
   end
-  
-  # def [](key)
-#     @params[key]
-#   end
 
   def permit(*keys)
     @permitted.push *keys
