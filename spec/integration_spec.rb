@@ -12,7 +12,8 @@ describe "the symphony of things" do
       end
 
       def route_does_params
-        render_content("got ##{ params["id"] }", "text/text")
+        p params
+        render_content("got ##{ params[:id] }", "text/text")
       end
 
       def update_session

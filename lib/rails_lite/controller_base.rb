@@ -10,7 +10,8 @@ class ControllerBase
   # setup the controller
   def initialize(req, res, route_params = {})
     @req, @res = req, res
-    @params = Params.new(req)
+    @params = Params.new(req, route_params)
+    @already_build_response = false
   end
 
   # populate the response with content
@@ -49,11 +50,11 @@ class ControllerBase
 
   # method exposing a `Session` object
   def session
-    @session ||= Session.new(@req)
+    @session ||= Session.new(@res)
   end
 
   # use this with the router to call action_name (:index, :show, :create...)
   def invoke_action(name)
-    render name
+    self.send(name.to_sym)
   end
 end

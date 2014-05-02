@@ -13,7 +13,7 @@ class Params
   # 3. route params
   def initialize(req, route_params = {})
     @req = req
-    @params = {}
+    @params = route_params
     #@params
     parse_query(@req.query_string)
     parse_body(@req.body)
@@ -24,15 +24,20 @@ class Params
 #   end
 
   def permit(*keys)
+    @permitted.push *keys
   end
 
   def require(key)
+    raise AttributeNotFoundError unless @params.has_key?(key)
+    @parms[key]
   end
 
   def permitted?(key)
+    @permitted.include?(key)
   end
 
   def to_s
+    @params.to_json.to_s
   end
 
   class AttributeNotFoundError < ArgumentError; end;
